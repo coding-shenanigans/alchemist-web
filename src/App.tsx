@@ -1,7 +1,5 @@
-import { Typography } from "@mui/material";
+import Header from "./components/header/Header";
 
-function App() {
-  return <Typography variant="h2">Home</Typography>;
+export default function App() {
+  return <Header />;
 }
-
-export default App;
