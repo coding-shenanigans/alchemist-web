@@ -1,4 +1,5 @@
 import { AppBar, Button, Toolbar, Typography } from "@mui/material";
+import { Link as RouterLink } from "react-router";
 
 export default function Header() {
   return (
@@ -9,10 +10,23 @@ export default function Header() {
             Alchemist
           </Typography>
 
-          <Button color="inherit" sx={{ mr: 1 }}>
+          <Button
+            color="inherit"
+            size="large"
+            component={RouterLink}
+            to="/signin"
+            sx={{ mr: 1 }}
+          >
             Sign In
           </Button>
-          <Button color="inherit">Sign Up</Button>
+          <Button
+            color="inherit"
+            size="large"
+            component={RouterLink}
+            to="/signup"
+          >
+            Sign Up
+          </Button>
         </Toolbar>
       </AppBar>
       <Toolbar />
