@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import RootLayout from "./components/RootLayout";
 import AppLayout from "./components/AppLayout";
-import SignIn from "./components/header/sign-in/SignIn";
+import SignIn from "./components/sign-in/SignIn";
 import SignUp from "./components/sign-up/SignUp";
 import Home from "./components/home/Home";
 
