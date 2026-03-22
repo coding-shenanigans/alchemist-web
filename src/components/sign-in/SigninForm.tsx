@@ -7,6 +7,9 @@ import {
   TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
+import { signIn } from "../../api/endpoints";
+import type { SignInRequest } from "../../types";
+import { useNavigate } from "react-router";
 
 interface SigninFormValues {
   email: string;
@@ -16,6 +19,8 @@ interface SigninFormValues {
 }
 
 export default function SigninForm() {
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -26,7 +31,20 @@ export default function SigninForm() {
     onSubmit: async (values: SigninFormValues) => {
       console.log(values);
 
-      // TODO: Implement logic to handle a sign in request.
+      const req: SignInRequest = {
+        email: values.email,
+        password: values.password,
+      };
+
+      const { error } = await signIn(req);
+
+      if (error) {
+        formik.setFieldValue("errorMessage", error.message);
+        return;
+      }
+
+      formik.resetForm();
+      navigate("/", { replace: true });
     },
   });
 
@@ -61,7 +79,7 @@ export default function SigninForm() {
         name="password"
         label="Password"
         margin="normal"
-        autoComplete="new-password"
+        autoComplete="current-password"
         type={formik.values.showPassword ? "text" : "password"}
         value={formik.values.password}
         onChange={formik.handleChange}

@@ -6,7 +6,7 @@ import {
 
 // Combine other slices here.
 // Example: AppStore = firstSlice & secondSlice & thirdSlice
-export type AppStore = UserSessionSlice;
+type AppStore = UserSessionSlice;
 
 export const useAppStore = create<AppStore>()((...a) => ({
   ...createUserSessionSlice(...a),

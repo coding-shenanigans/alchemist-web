@@ -1,10 +1,5 @@
 import type { StateCreator } from "zustand";
-
-export interface UserSession {
-  email: string;
-  username: string;
-  accessToken: string;
-}
+import type { UserSession } from "../types";
 
 export interface UserSessionSlice {
   userSession: UserSession | null;
