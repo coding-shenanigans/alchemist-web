@@ -1,4 +1,7 @@
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon,
+} from "@mui/icons-material";
 import {
   Alert,
   Button,
@@ -98,9 +101,9 @@ export default function SigninForm() {
                   edge="end"
                 >
                   {formik.values.showPassword ? (
-                    <Visibility />
+                    <VisibilityIcon />
                   ) : (
-                    <VisibilityOff />
+                    <VisibilityOffIcon />
                   )}
                 </IconButton>
               </InputAdornment>
