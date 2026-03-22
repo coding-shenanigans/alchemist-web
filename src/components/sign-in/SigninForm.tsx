@@ -32,8 +32,6 @@ export default function SigninForm() {
       errorMessage: "",
     },
     onSubmit: async (values: SigninFormValues) => {
-      console.log(values);
-
       const req: SignInRequest = {
         email: values.email,
         password: values.password,
