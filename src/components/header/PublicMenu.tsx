@@ -14,7 +14,7 @@ export default function PublicMenu() {
         Sign in
       </Button>
       <Button color="inherit" size="large" component={RouterLink} to="/signup">
-        Create account
+        Sign up
       </Button>
     </>
   );
