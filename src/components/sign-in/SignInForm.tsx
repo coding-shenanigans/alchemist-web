@@ -13,6 +13,7 @@ import { useFormik } from "formik";
 import { signIn } from "../../api/endpoints";
 import type { SignInRequest } from "../../types";
 import { useNavigate } from "react-router";
+import * as yup from "yup";
 
 interface SignInFormValues {
   email: string;
@@ -21,17 +22,25 @@ interface SignInFormValues {
   errorMessage: string;
 }
 
+const validationSchema = yup.object({
+  email: yup
+    .string()
+    .email("The email address is not valid.")
+    .required("An email address is required."),
+  password: yup.string().required("A password is required."),
+});
+
 export default function SigninForm() {
   const navigate = useNavigate();
 
   const formik = useFormik({
-    // TODO: Add validation for the sign in form.
     initialValues: {
       email: "",
       password: "",
       showPassword: false,
       errorMessage: "",
     },
+    validationSchema,
     onSubmit: async (values: SignInFormValues) => {
       const req: SignInRequest = {
         email: values.email,
@@ -74,6 +83,8 @@ export default function SigninForm() {
         autoComplete="email"
         value={formik.values.email}
         onChange={formik.handleChange}
+        error={formik.touched.email && !!formik.errors.email}
+        helperText={formik.touched.email && formik.errors.email}
       />
       <TextField
         fullWidth
@@ -85,6 +96,8 @@ export default function SigninForm() {
         type={formik.values.showPassword ? "text" : "password"}
         value={formik.values.password}
         onChange={formik.handleChange}
+        error={formik.touched.password && !!formik.errors.password}
+        helperText={formik.touched.password && formik.errors.password}
         slotProps={{
           input: {
             endAdornment: (
