@@ -155,7 +155,7 @@ export default function SignUpForm() {
         loadingPosition="end"
         sx={{ mt: 3 }}
       >
-        Create account
+        Sign up
       </Button>
     </form>
   );
