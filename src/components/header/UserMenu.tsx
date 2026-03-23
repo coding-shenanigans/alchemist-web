@@ -8,7 +8,11 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { Logout as LogoutIcon } from "@mui/icons-material";
+import {
+  Logout as LogoutIcon,
+  Person as PersonIcon,
+} from "@mui/icons-material";
+import { Link as RouterLink } from "react-router";
 
 interface UserMenuProps {
   email: string;
@@ -41,6 +45,12 @@ export default function UserMenu(props: UserMenuProps) {
           <ListItemText primary={props.username} secondary={props.email} />
         </MenuItem>
         <Divider />
+        <MenuItem onClick={handleClose} component={RouterLink} to="/profile">
+          <ListItemIcon>
+            <PersonIcon />
+          </ListItemIcon>
+          <ListItemText primary="Profile" />
+        </MenuItem>
         {/* TODO: Implement sign out functionality. */}
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
