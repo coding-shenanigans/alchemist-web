@@ -14,7 +14,7 @@ import { signIn } from "../../api/endpoints";
 import type { SignInRequest } from "../../types";
 import { useNavigate } from "react-router";
 
-interface SigninFormValues {
+interface SignInFormValues {
   email: string;
   password: string;
   showPassword: boolean;
@@ -25,13 +25,14 @@ export default function SigninForm() {
   const navigate = useNavigate();
 
   const formik = useFormik({
+    // TODO: Add validation for the sign in form.
     initialValues: {
       email: "",
       password: "",
       showPassword: false,
       errorMessage: "",
     },
-    onSubmit: async (values: SigninFormValues) => {
+    onSubmit: async (values: SignInFormValues) => {
       const req: SignInRequest = {
         email: values.email,
         password: values.password,
