@@ -49,11 +49,11 @@ export default function SignUp() {
         }}
       >
         By signing up, you agree to our{" "}
-        <Link underline="hover" component={RouterLink} to="terms-of-service">
+        <Link underline="hover" component={RouterLink} to="/terms-of-service">
           Terms of Service
         </Link>{" "}
         and{" "}
-        <Link underline="hover" component={RouterLink} to="privacy-policy">
+        <Link underline="hover" component={RouterLink} to="/privacy-policy">
           Privacy Policy
         </Link>
         .
