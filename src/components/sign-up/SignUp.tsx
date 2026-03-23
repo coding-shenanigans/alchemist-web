@@ -6,10 +6,10 @@ export default function SignUp() {
   return (
     <Box
       display="flex"
+      flexDirection="column"
       justifyContent="center"
       alignItems="center"
       minHeight="100vh"
-      flexDirection="column"
       // TODO: fetch color from constants
       sx={{ backgroundColor: "#f1f3f4" }}
     >
