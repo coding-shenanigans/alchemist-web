@@ -9,6 +9,7 @@ export default function SignUp() {
       justifyContent="center"
       alignItems="center"
       minHeight="100vh"
+      flexDirection="column"
       // TODO: fetch color from constants
       sx={{ backgroundColor: "#f1f3f4" }}
     >
@@ -38,6 +39,25 @@ export default function SignUp() {
           </Link>
         </Typography>
       </Paper>
+      <Typography
+        color="textSecondary"
+        sx={{
+          mx: 3,
+          mb: 3,
+          textAlign: "center",
+          maxWidth: { xs: "100%", sm: 450 },
+        }}
+      >
+        By signing up, you agree to our{" "}
+        <Link underline="hover" component={RouterLink} to="terms-of-service">
+          Terms of Service
+        </Link>{" "}
+        and{" "}
+        <Link underline="hover" component={RouterLink} to="privacy-policy">
+          Privacy Policy
+        </Link>
+        .
+      </Typography>
     </Box>
   );
 }
