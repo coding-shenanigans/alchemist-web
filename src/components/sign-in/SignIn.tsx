@@ -1,6 +1,6 @@
 import { Box, Link, Paper, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router";
-import SigninForm from "./SigninForm";
+import SignInForm from "./SignInForm";
 
 export default function SignIn() {
   return (
@@ -30,7 +30,7 @@ export default function SignIn() {
         <Typography variant="h6" mb={2}>
           Sign in
         </Typography>
-        <SigninForm />
+        <SignInForm />
         <Typography mt={3}>
           Don't have an account?{" "}
           <Link underline="hover" component={RouterLink} to="/signup">
