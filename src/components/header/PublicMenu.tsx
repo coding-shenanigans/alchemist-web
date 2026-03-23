@@ -11,10 +11,10 @@ export default function PublicMenu() {
         to="/signin"
         sx={{ mr: 1 }}
       >
-        Sign In
+        Sign in
       </Button>
       <Button color="inherit" size="large" component={RouterLink} to="/signup">
-        Sign Up
+        Sign up
       </Button>
     </>
   );

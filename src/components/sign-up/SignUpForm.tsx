@@ -17,8 +17,6 @@ interface SignUpFormValues {
   email: string;
   password: string;
   showPassword: boolean;
-  confirmPassword: string;
-  showConfirmPassword: boolean;
   errorMessage: string;
 }
 
@@ -55,10 +53,6 @@ const validationSchema = yup.object({
     .min(8, "The password should have at least 8 characters.")
     .max(72, "The password should not exceed 72 characters.")
     .required("A password is required."),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password")], "The passwords do not match.")
-    .required("Please confirm your password."),
 });
 
 export default function SignUpForm() {
@@ -68,8 +62,6 @@ export default function SignUpForm() {
       email: "",
       password: "",
       showPassword: false,
-      confirmPassword: "",
-      showConfirmPassword: false,
       errorMessage: "",
     },
     validationSchema,
@@ -144,47 +136,6 @@ export default function SignUpForm() {
                   edge="end"
                 >
                   {formik.values.showPassword ? (
-                    <VisibilityIcon />
-                  ) : (
-                    <VisibilityOffIcon />
-                  )}
-                </IconButton>
-              </InputAdornment>
-            ),
-          },
-        }}
-      />
-      <TextField
-        fullWidth
-        id="confirmPassword"
-        name="confirmPassword"
-        label="Confirm Password"
-        margin="normal"
-        autoComplete="new-password"
-        type={formik.values.showConfirmPassword ? "text" : "password"}
-        value={formik.values.confirmPassword}
-        onChange={formik.handleChange}
-        error={
-          formik.touched.confirmPassword && !!formik.errors.confirmPassword
-        }
-        helperText={
-          formik.touched.confirmPassword && formik.errors.confirmPassword
-        }
-        slotProps={{
-          input: {
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() =>
-                    formik.setFieldValue(
-                      "showConfirmPassword",
-                      !formik.values.showConfirmPassword,
-                    )
-                  }
-                  onMouseDown={(e) => e.preventDefault()}
-                  edge="end"
-                >
-                  {formik.values.showConfirmPassword ? (
                     <VisibilityIcon />
                   ) : (
                     <VisibilityOffIcon />
