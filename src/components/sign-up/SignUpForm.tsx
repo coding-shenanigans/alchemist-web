@@ -11,6 +11,9 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import type { SignUpRequest } from "../../types";
+import { signUp } from "../../api/endpoints";
+import { useNavigate } from "react-router";
 
 interface SignUpFormValues {
   username: string;
@@ -56,6 +59,8 @@ const validationSchema = yup.object({
 });
 
 export default function SignUpForm() {
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -66,7 +71,21 @@ export default function SignUpForm() {
     },
     validationSchema,
     onSubmit: async (values: SignUpFormValues) => {
-      console.log(values);
+      const req: SignUpRequest = {
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      };
+
+      const { error } = await signUp(req);
+
+      if (error) {
+        formik.setFieldValue("errorMessage", error.message);
+        return;
+      }
+
+      formik.resetForm();
+      navigate("/", { replace: true });
     },
   });
 

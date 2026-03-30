@@ -19,6 +19,16 @@ export interface SignInResponse {
   userSession: UserSession;
 }
 
+export interface SignUpRequest {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export interface SignUpResponse {
+  userSession: UserSession;
+}
+
 export interface ErrorInfo {
   code: number;
   message: string;
