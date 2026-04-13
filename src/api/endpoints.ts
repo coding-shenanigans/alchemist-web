@@ -1,4 +1,3 @@
-import axios from "axios";
 import type {
   ApiResponse,
   ErrorResponse,
@@ -7,57 +6,89 @@ import type {
   SignUpRequest,
   SignUpResponse,
 } from "../types";
-import client from "./client";
 import { useAppStore } from "../zustand/store";
 
 const { setUserSession } = useAppStore.getState();
 
-/**
- * Starts a user session.
- * @param request The request object.
- * @returns An API response object.
- */
-export const signIn = async (
-  request: SignInRequest,
-): Promise<ApiResponse<SignInResponse>> => {
-  try {
-    const response = await client.post<SignInResponse>("/auth/signin", request);
-    setUserSession(response.data.userSession);
+// TODO: Fetch backend url from env or constants file.
+const baseUrl = "http://localhost:9000";
 
-    return { status: response.status, data: response.data };
-  } catch (error) {
-    if (axios.isAxiosError<ErrorResponse>(error) && error.response) {
+/**
+ * Sends a fetch request.
+ * @param url The URL for the request.
+ * @param options The request options.
+ * @returns An ApiResponse object.
+ */
+const sendRequest = async <T>(
+  url: string,
+  options: RequestInit,
+): Promise<ApiResponse<T>> => {
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+
+    if (!response.ok) {
+      const errorResponse = data as ErrorResponse;
       return {
-        status: error.response.data.error.code,
-        error: new Error(error.response.data.error.message),
+        status: response.status,
+        error: new Error(errorResponse.error.message),
       };
     }
 
-    return { status: 500, error: new Error("An unknown error occurred") };
+    return { status: response.status, data };
+  } catch (error) {
+    console.error(error);
+
+    return { status: 500, error: new Error("An unknown error occurred.") };
   }
 };
 
 /**
  * Starts a user session.
  * @param request The request object.
- * @returns An API response object.
+ * @returns An ApiResponse object.
+ */
+export const signIn = async (
+  request: SignInRequest,
+): Promise<ApiResponse<SignInResponse>> => {
+  const url = `${baseUrl}/auth/signin`;
+  const options: RequestInit = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request),
+    credentials: "include",
+  };
+
+  const response = await sendRequest<SignInResponse>(url, options);
+
+  if (response.data?.userSession) {
+    setUserSession(response.data?.userSession);
+  }
+
+  return response;
+};
+
+/**
+ * Starts a user session.
+ * @param request The request object.
+ * @returns An ApiResponse object.
  */
 export const signUp = async (
   request: SignUpRequest,
 ): Promise<ApiResponse<SignUpResponse>> => {
-  try {
-    const response = await client.post<SignUpResponse>("/auth/signup", request);
-    setUserSession(response.data.userSession);
+  const url = `${baseUrl}/auth/signup`;
+  const options: RequestInit = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request),
+    credentials: "include",
+  };
 
-    return { status: response.status, data: response.data };
-  } catch (error) {
-    if (axios.isAxiosError<ErrorResponse>(error) && error.response) {
-      return {
-        status: error.response.data.error.code,
-        error: new Error(error.response.data.error.message),
-      };
-    }
+  const response = await sendRequest<SignUpResponse>(url, options);
 
-    return { status: 500, error: new Error("An unknown error occurred") };
+  if (response.data?.userSession) {
+    setUserSession(response.data?.userSession);
   }
+
+  return response;
 };
