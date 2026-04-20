@@ -12,7 +12,8 @@ import {
   Logout as LogoutIcon,
   Person as PersonIcon,
 } from "@mui/icons-material";
-import { Link as RouterLink } from "react-router";
+import { Link as RouterLink, useNavigate } from "react-router";
+import { signOut } from "../../api/endpoints";
 
 interface UserMenuProps {
   email: string;
@@ -22,6 +23,7 @@ interface UserMenuProps {
 export default function UserMenu(props: UserMenuProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -29,6 +31,12 @@ export default function UserMenu(props: UserMenuProps) {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSignOut = () => {
+    handleClose();
+    signOut();
+    navigate("/signin", { replace: true });
   };
 
   return (
@@ -51,8 +59,8 @@ export default function UserMenu(props: UserMenuProps) {
           </ListItemIcon>
           <ListItemText primary="Profile" />
         </MenuItem>
-        {/* TODO: Implement sign out functionality. */}
-        <MenuItem onClick={handleClose}>
+        <Divider />
+        <MenuItem onClick={handleSignOut}>
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>
