@@ -29,6 +29,10 @@ export interface SignUpResponse {
   userSession: UserSession;
 }
 
+export interface RefreshResponse {
+  userSession: UserSession;
+}
+
 export interface ErrorInfo {
   code: number;
   message: string;
