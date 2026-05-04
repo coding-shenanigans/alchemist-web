@@ -184,7 +184,14 @@ export const signOut = (): void => {
  * @returns An ApiResponse object.
  */
 export const refresh = async (): Promise<ApiResponse<RefreshResponse>> => {
-  const { setUserSession } = useAppStore.getState();
+  const { isAuthenticated, setUserSession } = useAppStore.getState();
+
+  // Only refresh the user session if a user is authenticated.
+  // This handles a scenario where a user signed out, but the signout API call
+  // failed. Resulting in a refresh token existing after the user signed out.
+  if (!isAuthenticated) {
+    return { status: 401, error: new Error("The user is not authenticated.") };
+  }
 
   const url = `${baseUrl}/auth/refresh`;
   const options: RequestInit = {
