@@ -65,7 +65,6 @@ const refreshAndRetry = async <T>(
   const { error } = await getRefreshPromise();
 
   if (error) {
-    signOut();
     return { status: 401, error: new Error("The user session expired.") };
   }
 
@@ -201,6 +200,11 @@ export const refresh = async (): Promise<ApiResponse<RefreshResponse>> => {
   };
 
   const response = await sendRequest<RefreshResponse>(url, options, false);
+
+  if (response.error) {
+    signOut();
+    return response;
+  }
 
   if (response.data?.userSession) {
     setUserSession(response.data.userSession);
