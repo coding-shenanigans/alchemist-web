@@ -33,6 +33,23 @@ export interface RefreshResponse {
   userSession: UserSession;
 }
 
+export interface GetUserProfileResponse {
+  username: string;
+}
+
+export interface WishList {
+  id: number;
+  userId: number;
+  name: string;
+  visibility: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ListWishListsResponse {
+  wishLists: WishList[];
+}
+
 export interface ErrorInfo {
   code: number;
   message: string;

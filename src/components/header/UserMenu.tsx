@@ -53,7 +53,11 @@ export default function UserMenu(props: UserMenuProps) {
           <ListItemText primary={props.username} secondary={props.email} />
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose} component={RouterLink} to="/profile">
+        <MenuItem
+          onClick={handleClose}
+          component={RouterLink}
+          to={`/users/${props.username}`}
+        >
           <ListItemIcon>
             <PersonIcon />
           </ListItemIcon>

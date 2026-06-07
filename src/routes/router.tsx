@@ -4,7 +4,7 @@ import AppLayout from "../components/AppLayout";
 import SignIn from "../components/sign-in/SignIn";
 import SignUp from "../components/sign-up/SignUp";
 import Home from "../components/home/Home";
-import NotFound from "../components/NotFound";
+import ErrorPage from "../components/error/ErrorPage";
 import Profile from "../components/profile/Profile";
 import { userSessionLoader } from "./user-session-loader";
 import SplashScreen from "../components/SplashScreen";
@@ -25,12 +25,17 @@ export const router = createBrowserRouter([
             element: <Home />,
           },
           {
-            path: "/profile",
+            path: "/users/:username",
             element: <Profile />,
           },
           {
             path: "*",
-            element: <NotFound />,
+            element: (
+              <ErrorPage
+                message="We can't find the page you're looking for."
+                code="404"
+              />
+            ),
           },
         ],
       },

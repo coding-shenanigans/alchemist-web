@@ -1,22 +1,40 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import PublicIcon from "@mui/icons-material/Public";
-import PeopleIcon from "@mui/icons-material/People";
-import LockIcon from "@mui/icons-material/Lock";
+import { useParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getUserProfileQuery,
+  listWishListsQuery,
+} from "../../api/endpoint-wrappers";
+import ProfileSkeleton from "./ProfileSkeleton";
+import ErrorPage from "../error/ErrorPage";
+import WishListTable from "./WishListTable";
 
 export default function Profile() {
+  const { username } = useParams();
+
+  const userProfileQuery = useQuery({
+    queryKey: ["userProfile", username],
+    queryFn: () => getUserProfileQuery(username),
+  });
+
+  const wishListsQuery = useQuery({
+    queryKey: ["wishLists", username],
+    queryFn: () => listWishListsQuery(username),
+  });
+
+  if (userProfileQuery.isLoading || wishListsQuery.isLoading) {
+    return <ProfileSkeleton />;
+  }
+
+  if (userProfileQuery.isError) {
+    return <ErrorPage message={userProfileQuery.error.message} />;
+  }
+
+  if (wishListsQuery.isError) {
+    return <ErrorPage message={wishListsQuery.error.message} />;
+  }
+
   return (
     <>
       <Box
@@ -29,11 +47,14 @@ export default function Profile() {
         // TODO: fetch color from constants
         sx={{ backgroundColor: "#f1f3f4" }}
       >
-        <Avatar alt="user avatar" sx={{ width: 128, height: 128 }} />
-        <Typography variant="h4">username</Typography>
+        <Avatar alt="user avatar" sx={{ width: 128, height: 128, mb: 1 }} />
+        <Typography variant="h4">
+          {userProfileQuery.isLoading ? "" : userProfileQuery.data?.username}
+        </Typography>
       </Box>
+
       <Box display="flex" flexDirection="column" m={2}>
-        <Box display="flex" justifyContent="center" alignItems="center" my={2}>
+        <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
           <Typography variant="h5" sx={{ flexGrow: 1 }}>
             Wish Lists
           </Typography>
@@ -41,51 +62,12 @@ export default function Profile() {
             Create wish list
           </Button>
         </Box>
-        <Typography>There are no wish lists to display.</Typography>
-        <List>
-          <ListItem
-            secondaryAction={
-              <IconButton edge="end" aria-label="wish list options">
-                <MoreVertIcon />
-              </IconButton>
-            }
-          >
-            <ListItemButton>
-              <ListItemIcon>
-                <PublicIcon />
-              </ListItemIcon>
-              <ListItemText primary="List 1" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem
-            secondaryAction={
-              <IconButton edge="end" aria-label="wish list options">
-                <MoreVertIcon />
-              </IconButton>
-            }
-          >
-            <ListItemButton>
-              <ListItemIcon>
-                <PeopleIcon />
-              </ListItemIcon>
-              <ListItemText primary="List 2" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem
-            secondaryAction={
-              <IconButton edge="end" aria-label="wish list options">
-                <MoreVertIcon />
-              </IconButton>
-            }
-          >
-            <ListItemButton>
-              <ListItemIcon>
-                <LockIcon />
-              </ListItemIcon>
-              <ListItemText primary="List 3" />
-            </ListItemButton>
-          </ListItem>
-        </List>
+
+        {wishListsQuery.data?.wishLists?.length ? (
+          <WishListTable wishLists={wishListsQuery.data.wishLists} />
+        ) : (
+          <Typography>There are no wish lists to display.</Typography>
+        )}
       </Box>
     </>
   );
