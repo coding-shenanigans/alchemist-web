@@ -1,6 +1,8 @@
 import type {
   ApiResponse,
   ErrorResponse,
+  GetUserProfileResponse,
+  ListWishListsResponse,
   RefreshResponse,
   SignInRequest,
   SignInResponse,
@@ -179,7 +181,6 @@ export const signOut = (): void => {
 
 /**
  * Refreshes a user session.
- * @param request The request object.
  * @returns An ApiResponse object.
  */
 export const refresh = async (): Promise<ApiResponse<RefreshResponse>> => {
@@ -211,4 +212,60 @@ export const refresh = async (): Promise<ApiResponse<RefreshResponse>> => {
   }
 
   return response;
+};
+
+/**
+ * Fetches a user's profile.
+ * @param username The target username.
+ * @returns An ApiResponse object.
+ */
+export const getUserProfile = async (
+  username: string,
+): Promise<ApiResponse<GetUserProfileResponse>> => {
+  const { userSession } = useAppStore.getState();
+
+  const url = `${baseUrl}/users/${username}/profile`;
+  const options: RequestInit = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+
+      // This is a hybrid endpoint. Only include the Authorization header if a
+      // user session exists.
+      ...(userSession && {
+        Authorization: `Bearer ${userSession.accessToken}`,
+      }),
+    },
+    credentials: "include",
+  };
+
+  return await sendRequest<GetUserProfileResponse>(url, options, true);
+};
+
+/**
+ * Fetches a user's wish lists.
+ * @param username The target username.
+ * @returns An ApiResponse object.
+ */
+export const listWishLists = async (
+  username: string,
+): Promise<ApiResponse<ListWishListsResponse>> => {
+  const { userSession } = useAppStore.getState();
+
+  const url = `${baseUrl}/users/${username}/wish-lists`;
+  const options: RequestInit = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+
+      // This is a hybrid endpoint. Only include the Authorization header if a
+      // user session exists.
+      ...(userSession && {
+        Authorization: `Bearer ${userSession.accessToken}`,
+      }),
+    },
+    credentials: "include",
+  };
+
+  return await sendRequest<ListWishListsResponse>(url, options, true);
 };
