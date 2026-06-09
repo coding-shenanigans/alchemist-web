@@ -46,6 +46,17 @@ export interface WishList {
   updatedAt: string;
 }
 
+export interface CreateWishListRequest {
+  wishList: {
+    name: string;
+    visibility: string;
+  };
+}
+
+export interface CreateWishListResponse {
+  wishList: WishList;
+}
+
 export interface ListWishListsResponse {
   wishLists: WishList[];
 }
