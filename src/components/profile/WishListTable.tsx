@@ -42,6 +42,7 @@ export default function WishListTable({ wishLists }: WishListTableProps) {
         <ListItem
           key={wishList.id}
           disablePadding
+          // TODO: Only show this button when viewing your own wish lists.
           secondaryAction={
             <IconButton edge="end" aria-label="wish list options">
               <MoreVertIcon />

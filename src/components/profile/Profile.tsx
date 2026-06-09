@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useParams } from "react-router";
@@ -9,17 +10,29 @@ import {
 import ProfileSkeleton from "./ProfileSkeleton";
 import ErrorPage from "../error/ErrorPage";
 import WishListTable from "./WishListTable";
+import NewWishListForm from "./NewWishListForm";
 
 export default function Profile() {
+  const [openNewWishListForm, setOpenNewWishListForm] = useState(false);
   const { username } = useParams();
 
+  const handleOpenNewWishListForm = () => {
+    setOpenNewWishListForm(true);
+  };
+
+  const handleCloseNewWishListForm = () => {
+    setOpenNewWishListForm(false);
+  };
+
   const userProfileQuery = useQuery({
-    queryKey: ["userProfile", username],
+    // TODO: Store the query key for reusability instead of hardcoding it.
+    queryKey: ["getUserProfileResponse", username],
     queryFn: () => getUserProfileQuery(username),
   });
 
   const wishListsQuery = useQuery({
-    queryKey: ["wishLists", username],
+    // TODO: Store the query key for reusability instead of hardcoding it.
+    queryKey: ["listWishListsResponse", username],
     queryFn: () => listWishListsQuery(username),
   });
 
@@ -37,6 +50,7 @@ export default function Profile() {
 
   return (
     <>
+      {/* Profile section */}
       <Box
         display="flex"
         justifyContent="center"
@@ -53,12 +67,19 @@ export default function Profile() {
         </Typography>
       </Box>
 
+      {/* Wish lists section. */}
       <Box display="flex" flexDirection="column" m={2}>
         <Box display="flex" justifyContent="center" alignItems="center" mb={2}>
           <Typography variant="h5" sx={{ flexGrow: 1 }}>
             Wish Lists
           </Typography>
-          <Button size="large" variant="contained" startIcon={<AddIcon />}>
+          {/* TODO: Only show this button when viewing your own profile. */}
+          <Button
+            size="large"
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={handleOpenNewWishListForm}
+          >
             Create wish list
           </Button>
         </Box>
@@ -69,6 +90,13 @@ export default function Profile() {
           <Typography>There are no wish lists to display.</Typography>
         )}
       </Box>
+
+      {/* Dialog windows. */}
+      <NewWishListForm
+        open={openNewWishListForm}
+        handleClose={handleCloseNewWishListForm}
+        username={username}
+      />
     </>
   );
 }
