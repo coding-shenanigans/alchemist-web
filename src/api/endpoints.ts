@@ -10,6 +10,8 @@ import type {
   SignInResponse,
   SignUpRequest,
   SignUpResponse,
+  UpdateWishListRequest,
+  UpdateWishListResponse,
 } from "../types";
 import { useAppStore } from "../zustand/store";
 
@@ -259,6 +261,34 @@ export const createWishList = async (
   const url = `${baseUrl}/users/${username}/wish-lists`;
   const options: RequestInit = {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userSession?.accessToken}`,
+    },
+    body: JSON.stringify(request),
+    credentials: "include",
+  };
+
+  return await sendRequest<CreateWishListResponse>(url, options, true);
+};
+
+/**
+ * Updates a wish list.
+ * @param username The target username.
+ * @param wishListId The target wish list id.
+ * @param request The request object.
+ * @returns An ApiResponse object.
+ */
+export const updateWishList = async (
+  username: string,
+  wishListId: number,
+  request: UpdateWishListRequest,
+): Promise<ApiResponse<UpdateWishListResponse>> => {
+  const { userSession } = useAppStore.getState();
+
+  const url = `${baseUrl}/users/${username}/wish-lists/${wishListId}`;
+  const options: RequestInit = {
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${userSession?.accessToken}`,

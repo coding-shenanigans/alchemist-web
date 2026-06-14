@@ -57,6 +57,15 @@ export interface CreateWishListResponse {
   wishList: WishList;
 }
 
+export interface UpdateWishListRequest {
+  name: string;
+  visibility: string;
+}
+
+export interface UpdateWishListResponse {
+  wishList: WishList;
+}
+
 export interface ListWishListsResponse {
   wishLists: WishList[];
 }
