@@ -10,9 +10,13 @@ import {
 } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
+import type {
+  ListWishListsResponse,
+  UpdateWishListRequest,
+  WishList,
+} from "../../types";
 import * as yup from "yup";
-import type { CreateWishListRequest, ListWishListsResponse } from "../../types";
-import { createWishList } from "../../api/endpoints";
+import { updateWishList } from "../../api/endpoints";
 
 // TODO: Define the wish list visibility options in a reusable location.
 const visibilityOptions = [
@@ -28,25 +32,37 @@ const validationSchema = yup.object({
     .required("The name is required."),
 });
 
-interface NewWishListFormProps {
+interface EditWishListFormProps {
   open: boolean;
   handleClose: () => void;
   username: string | undefined;
+  wishList: WishList | null;
 }
 
-export default function NewWishListForm(props: NewWishListFormProps) {
+export default function EditWishListForm(props: EditWishListFormProps) {
   const queryClient = useQueryClient();
 
   const formik = useFormik({
-    initialValues: { name: "", visibility: "private", apiErrorMessage: "" },
+    initialValues: {
+      name: props.wishList?.name ?? "",
+      visibility: props.wishList?.visibility ?? "private",
+      apiErrorMessage: "",
+    },
+    enableReinitialize: true,
     validationSchema,
     onSubmit: async (values) => {
       const username = props.username ?? "";
-      const request: CreateWishListRequest = {
-        wishList: { name: values.name, visibility: values.visibility },
+      const wishListId = props.wishList?.id ?? 0;
+      const request: UpdateWishListRequest = {
+        name: values.name,
+        visibility: values.visibility,
       };
 
-      const { data, error } = await createWishList(username, request);
+      const { data, error } = await updateWishList(
+        username,
+        wishListId,
+        request,
+      );
 
       if (error) {
         formik.setFieldValue("apiErrorMessage", error.message);
@@ -58,7 +74,9 @@ export default function NewWishListForm(props: NewWishListFormProps) {
           // TODO: Store the query key for reusability instead of hardcoding it.
           ["listWishListsResponse", props.username],
           (prevState: ListWishListsResponse) => ({
-            wishLists: [data.wishList, ...prevState.wishLists],
+            wishLists: prevState.wishLists.map((wishList) =>
+              wishList.id === data.wishList.id ? data.wishList : wishList,
+            ),
           }),
         );
       }
@@ -75,9 +93,9 @@ export default function NewWishListForm(props: NewWishListFormProps) {
       fullWidth
       maxWidth="xs"
     >
-      <DialogTitle>New Wish List</DialogTitle>
+      <DialogTitle>Edit Wish List</DialogTitle>
       <DialogContent>
-        <form id="new-wish-list-form" onSubmit={formik.handleSubmit}>
+        <form id="edit-wish-list-form" onSubmit={formik.handleSubmit}>
           {formik.values.apiErrorMessage && (
             <Alert
               variant="filled"
@@ -126,11 +144,11 @@ export default function NewWishListForm(props: NewWishListFormProps) {
         <Button
           variant="contained"
           type="submit"
-          form="new-wish-list-form"
+          form="edit-wish-list-form"
           loading={formik.isSubmitting}
           loadingPosition="end"
         >
-          Create
+          Update
         </Button>
       </DialogActions>
     </Dialog>
