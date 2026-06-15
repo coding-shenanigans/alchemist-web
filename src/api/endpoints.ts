@@ -297,7 +297,32 @@ export const updateWishList = async (
     credentials: "include",
   };
 
-  return await sendRequest<CreateWishListResponse>(url, options, true);
+  return await sendRequest<UpdateWishListResponse>(url, options, true);
+};
+
+/**
+ * Deletes a wish list.
+ * @param username The target username.
+ * @param wishListId The target wish list id.
+ * @returns An ApiResponse object.
+ */
+export const deleteWishList = async (
+  username: string,
+  wishListId: number,
+): Promise<ApiResponse<void>> => {
+  const { userSession } = useAppStore.getState();
+
+  const url = `${baseUrl}/users/${username}/wish-lists/${wishListId}`;
+  const options: RequestInit = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userSession?.accessToken}`,
+    },
+    credentials: "include",
+  };
+
+  return await sendRequest<void>(url, options, true);
 };
 
 /**

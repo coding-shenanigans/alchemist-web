@@ -45,6 +45,7 @@ interface WishListTableProps {
   wishLists: WishList[];
   setSelectedWishList: Dispatch<SetStateAction<WishList | null>>;
   handleOpenEditWishListForm: () => void;
+  handleOpenDeleteWishListForm: () => void;
 }
 
 export default function WishListTable(props: WishListTableProps) {
@@ -68,6 +69,7 @@ export default function WishListTable(props: WishListTableProps) {
   };
 
   const handleDelete = () => {
+    props.handleOpenDeleteWishListForm();
     handleCloseMenu();
   };
 
