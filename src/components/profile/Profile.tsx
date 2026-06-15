@@ -14,6 +14,7 @@ import NewWishListForm from "./NewWishListForm";
 import EditWishListForm from "./EditWishListForm";
 import type { WishList } from "../../types";
 import DeleteWishListForm from "./DeleteWishListForm";
+import { useAppStore } from "../../zustand/store";
 
 export default function Profile() {
   const [openNewWishListForm, setOpenNewWishListForm] = useState(false);
@@ -23,6 +24,12 @@ export default function Profile() {
     null,
   );
   const { username } = useParams();
+  const userSession = useAppStore((state) => state.userSession);
+  const isProfileOwner = Boolean(
+    userSession &&
+    username &&
+    userSession.username.toLowerCase() === username.toLowerCase(),
+  );
 
   const handleOpenNewWishListForm = () => {
     setOpenNewWishListForm(true);
@@ -97,19 +104,21 @@ export default function Profile() {
           <Typography variant="h5" sx={{ flexGrow: 1 }}>
             Wish Lists
           </Typography>
-          {/* TODO: Only show this button when viewing your own profile. */}
-          <Button
-            size="large"
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={handleOpenNewWishListForm}
-          >
-            Create wish list
-          </Button>
+          {isProfileOwner && (
+            <Button
+              size="large"
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={handleOpenNewWishListForm}
+            >
+              Create wish list
+            </Button>
+          )}
         </Box>
 
         {wishListsQuery.data?.wishLists?.length ? (
           <WishListTable
+            isProfileOwner={isProfileOwner}
             wishLists={wishListsQuery.data.wishLists}
             setSelectedWishList={setSelectedWishList}
             handleOpenEditWishListForm={handleOpenEditWishListForm}
