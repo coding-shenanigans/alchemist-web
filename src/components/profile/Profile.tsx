@@ -13,10 +13,12 @@ import WishListTable from "./WishListTable";
 import NewWishListForm from "./NewWishListForm";
 import EditWishListForm from "./EditWishListForm";
 import type { WishList } from "../../types";
+import DeleteWishListForm from "./DeleteWishListForm";
 
 export default function Profile() {
   const [openNewWishListForm, setOpenNewWishListForm] = useState(false);
   const [openEditWishListForm, setOpenEditWishListForm] = useState(false);
+  const [openDeleteWishListForm, setOpenDeleteWishListForm] = useState(false);
   const [selectedWishList, setSelectedWishList] = useState<WishList | null>(
     null,
   );
@@ -36,6 +38,14 @@ export default function Profile() {
 
   const handleCloseEditWishListForm = () => {
     setOpenEditWishListForm(false);
+  };
+
+  const handleOpenDeleteWishListForm = () => {
+    setOpenDeleteWishListForm(true);
+  };
+
+  const handleCloseDeleteWishListForm = () => {
+    setOpenDeleteWishListForm(false);
   };
 
   const userProfileQuery = useQuery({
@@ -103,6 +113,7 @@ export default function Profile() {
             wishLists={wishListsQuery.data.wishLists}
             setSelectedWishList={setSelectedWishList}
             handleOpenEditWishListForm={handleOpenEditWishListForm}
+            handleOpenDeleteWishListForm={handleOpenDeleteWishListForm}
           />
         ) : (
           <Typography>There are no wish lists to display.</Typography>
@@ -118,6 +129,12 @@ export default function Profile() {
       <EditWishListForm
         open={openEditWishListForm}
         handleClose={handleCloseEditWishListForm}
+        username={username}
+        wishList={selectedWishList}
+      />
+      <DeleteWishListForm
+        open={openDeleteWishListForm}
+        handleClose={handleCloseDeleteWishListForm}
         username={username}
         wishList={selectedWishList}
       />
