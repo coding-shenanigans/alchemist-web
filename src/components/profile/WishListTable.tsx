@@ -42,6 +42,7 @@ const getVisibilityIcon = (visibility: string): JSX.Element => {
 };
 
 interface WishListTableProps {
+  isProfileOwner: boolean;
   wishLists: WishList[];
   setSelectedWishList: Dispatch<SetStateAction<WishList | null>>;
   handleOpenEditWishListForm: () => void;
@@ -79,35 +80,36 @@ export default function WishListTable(props: WishListTableProps) {
         <ListItem
           key={wishList.id}
           disablePadding
-          // TODO: Only show this button when viewing your own wish lists.
           secondaryAction={
-            <>
-              <IconButton
-                edge="end"
-                aria-label="wish list options"
-                onClick={(event) => handleOpenMenu(event, wishList)}
-              >
-                <MoreVertIcon />
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleCloseMenu}
-              >
-                <MenuItem onClick={handleEdit}>
-                  <ListItemIcon>
-                    <EditIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Edit</ListItemText>
-                </MenuItem>
-                <MenuItem onClick={handleDelete}>
-                  <ListItemIcon>
-                    <DeleteIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Delete</ListItemText>
-                </MenuItem>
-              </Menu>
-            </>
+            props.isProfileOwner ? (
+              <>
+                <IconButton
+                  edge="end"
+                  aria-label="wish list options"
+                  onClick={(event) => handleOpenMenu(event, wishList)}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseMenu}
+                >
+                  <MenuItem onClick={handleEdit}>
+                    <ListItemIcon>
+                      <EditIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Edit</ListItemText>
+                  </MenuItem>
+                  <MenuItem onClick={handleDelete}>
+                    <ListItemIcon>
+                      <DeleteIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Delete</ListItemText>
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : undefined
           }
         >
           <ListItemButton>
