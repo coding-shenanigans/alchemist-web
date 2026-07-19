@@ -118,6 +118,7 @@ export default function Profile() {
 
         {wishListsQuery.data?.wishLists?.length ? (
           <WishListTable
+            username={username}
             isProfileOwner={isProfileOwner}
             wishLists={wishListsQuery.data.wishLists}
             setSelectedWishList={setSelectedWishList}

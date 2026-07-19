@@ -8,6 +8,7 @@ import ErrorPage from "../components/error/ErrorPage";
 import Profile from "../components/profile/Profile";
 import { userSessionLoader } from "./user-session-loader";
 import SplashScreen from "../components/SplashScreen";
+import WishList from "../components/wish-list/WishList";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ export const router = createBrowserRouter([
           {
             path: "/users/:username",
             element: <Profile />,
+          },
+          {
+            path: "/users/:username/wish-lists/:wishListId",
+            element: <WishList />,
           },
           {
             path: "*",

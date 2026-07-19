@@ -23,6 +23,7 @@ import {
   type MouseEvent,
   type SetStateAction,
 } from "react";
+import { Link as RouterLink } from "react-router";
 
 /**
  * Maps a visibility string to the corresponding icon.
@@ -42,6 +43,8 @@ const getVisibilityIcon = (visibility: string): JSX.Element => {
 };
 
 interface WishListTableProps {
+  // TODO: Find the best way to handle a potentially undefined string value.
+  username?: string;
   isProfileOwner: boolean;
   wishLists: WishList[];
   setSelectedWishList: Dispatch<SetStateAction<WishList | null>>;
@@ -112,7 +115,10 @@ export default function WishListTable(props: WishListTableProps) {
             ) : undefined
           }
         >
-          <ListItemButton>
+          <ListItemButton
+            component={RouterLink}
+            to={`/users/${props.username}/wish-lists/${wishList.id}`}
+          >
             <ListItemIcon>
               {getVisibilityIcon(wishList.visibility)}
             </ListItemIcon>
