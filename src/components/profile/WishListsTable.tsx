@@ -21,7 +21,7 @@ import {
 import { Link as RouterLink } from "react-router";
 import VisibilityIcon from "../shared/VisibilityIcon";
 
-interface WishListTableProps {
+interface WishListsTableProps {
   // TODO: Find the best way to handle a potentially undefined string value.
   username?: string;
   isProfileOwner: boolean;
@@ -31,7 +31,7 @@ interface WishListTableProps {
   handleOpenDeleteWishListForm: () => void;
 }
 
-export default function WishListTable(props: WishListTableProps) {
+export default function WishListsTable(props: WishListsTableProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleOpenMenu = (

@@ -46,6 +46,16 @@ export interface WishList {
   updatedAt: string;
 }
 
+export interface Item {
+  id: number;
+  wishListId: number;
+  url: string;
+  name: string;
+  price: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CreateWishListRequest {
   wishList: {
     name: string;
