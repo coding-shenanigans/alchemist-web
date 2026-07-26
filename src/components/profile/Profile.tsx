@@ -9,7 +9,7 @@ import {
 } from "../../api/endpoint-wrappers";
 import ProfileSkeleton from "./ProfileSkeleton";
 import ErrorPage from "../error/ErrorPage";
-import WishListTable from "./WishListTable";
+import WishListsTable from "./WishListsTable";
 import NewWishListForm from "./NewWishListForm";
 import EditWishListForm from "./EditWishListForm";
 import type { WishList } from "../../types";
@@ -117,7 +117,7 @@ export default function Profile() {
         </Box>
 
         {wishListsQuery.data?.wishLists?.length ? (
-          <WishListTable
+          <WishListsTable
             username={username}
             isProfileOwner={isProfileOwner}
             wishLists={wishListsQuery.data.wishLists}
