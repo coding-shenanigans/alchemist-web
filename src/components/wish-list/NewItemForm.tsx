@@ -35,7 +35,7 @@ interface NewItemFormProps {
 
 export default function NewItemForm(props: NewItemFormProps) {
   const formik = useFormik({
-    initialValues: { url: "", name: "", price: 0, apiErrorMessage: "" },
+    initialValues: { url: "", name: "", price: "", apiErrorMessage: "" },
     validationSchema,
     onSubmit: async (values) => {
       console.log(values);

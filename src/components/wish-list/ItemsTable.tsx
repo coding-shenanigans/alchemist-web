@@ -31,7 +31,12 @@ export default function ItemsTable(props: ItemsTableProps) {
             ) : undefined
           }
         >
-          <ListItemButton component={RouterLink} to={item.url}>
+          <ListItemButton
+            component={RouterLink}
+            to={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <ListItemText primary={item.name} secondary={`$${item.price}`} />
           </ListItemButton>
         </ListItem>
