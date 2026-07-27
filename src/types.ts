@@ -80,6 +80,14 @@ export interface ListWishListsResponse {
   wishLists: WishList[];
 }
 
+export interface GetWishListResponse {
+  wishList: WishList;
+}
+
+export interface ListItemsResponse {
+  items: Item[];
+}
+
 export interface ErrorInfo {
   code: number;
   message: string;

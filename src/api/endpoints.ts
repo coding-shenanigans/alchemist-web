@@ -4,6 +4,8 @@ import type {
   CreateWishListResponse,
   ErrorResponse,
   GetUserProfileResponse,
+  GetWishListResponse,
+  ListItemsResponse,
   ListWishListsResponse,
   RefreshResponse,
   SignInRequest,
@@ -351,4 +353,64 @@ export const listWishLists = async (
   };
 
   return await sendRequest<ListWishListsResponse>(url, options, true);
+};
+
+/**
+ * Fetches a wish list.
+ * @param username The target username.
+ * @param wishListId The target wish list id.
+ * @returns An ApiResponse object.
+ */
+export const getWishList = async (
+  username: string,
+  wishListId: string,
+): Promise<ApiResponse<GetWishListResponse>> => {
+  const { userSession } = useAppStore.getState();
+
+  const url = `${baseUrl}/users/${username}/wish-lists/${wishListId}`;
+  const options: RequestInit = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+
+      // This is a hybrid endpoint. Only include the Authorization header if a
+      // user session exists.
+      ...(userSession && {
+        Authorization: `Bearer ${userSession.accessToken}`,
+      }),
+    },
+    credentials: "include",
+  };
+
+  return await sendRequest<GetWishListResponse>(url, options, true);
+};
+
+/**
+ * Fetches a wish list's items.
+ * @param username The target username.
+ * @param wishListId The target wish list id.
+ * @returns An ApiResponse object.
+ */
+export const listItems = async (
+  username: string,
+  wishListId: string,
+): Promise<ApiResponse<ListItemsResponse>> => {
+  const { userSession } = useAppStore.getState();
+
+  const url = `${baseUrl}/users/${username}/wish-lists/${wishListId}/items`;
+  const options: RequestInit = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+
+      // This is a hybrid endpoint. Only include the Authorization header if a
+      // user session exists.
+      ...(userSession && {
+        Authorization: `Bearer ${userSession.accessToken}`,
+      }),
+    },
+    credentials: "include",
+  };
+
+  return await sendRequest<ListItemsResponse>(url, options, true);
 };
