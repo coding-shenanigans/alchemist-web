@@ -37,6 +37,7 @@ export default function ItemsTable(props: ItemsTableProps) {
             target="_blank"
             rel="noopener noreferrer"
           >
+            {/* TODO: Format the price to always show 2 decimal places. */}
             <ListItemText primary={item.name} secondary={`$${item.price}`} />
           </ListItemButton>
         </ListItem>

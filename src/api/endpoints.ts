@@ -1,5 +1,7 @@
 import type {
   ApiResponse,
+  CreateItemRequest,
+  CreateItemResponse,
   CreateWishListRequest,
   CreateWishListResponse,
   ErrorResponse,
@@ -383,6 +385,34 @@ export const getWishList = async (
   };
 
   return await sendRequest<GetWishListResponse>(url, options, true);
+};
+
+/**
+ * Creates a new item.
+ * @param username The target username.
+ * @param wishListId The target wish list id.
+ * @param request The request object.
+ * @returns An ApiResponse object.
+ */
+export const createItem = async (
+  username: string,
+  wishListId: string,
+  request: CreateItemRequest,
+): Promise<ApiResponse<CreateItemResponse>> => {
+  const { userSession } = useAppStore.getState();
+
+  const url = `${baseUrl}/users/${username}/wish-lists/${wishListId}/items`;
+  const options: RequestInit = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userSession?.accessToken}`,
+    },
+    body: JSON.stringify(request),
+    credentials: "include",
+  };
+
+  return await sendRequest<CreateItemResponse>(url, options, true);
 };
 
 /**
