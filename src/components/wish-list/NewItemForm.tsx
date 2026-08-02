@@ -11,6 +11,9 @@ import {
 import { useFormik } from "formik";
 import { NumericFormat } from "react-number-format";
 import * as yup from "yup";
+import type { CreateItemRequest, ListItemsResponse } from "../../types";
+import { createItem } from "../../api/endpoints";
+import { useQueryClient } from "@tanstack/react-query";
 
 const validationSchema = yup.object({
   url: yup
@@ -31,14 +34,42 @@ const validationSchema = yup.object({
 interface NewItemFormProps {
   open: boolean;
   handleClose: () => void;
+  username?: string;
+  wishListId?: string;
 }
 
 export default function NewItemForm(props: NewItemFormProps) {
+  const queryClient = useQueryClient();
+
   const formik = useFormik({
-    initialValues: { url: "", name: "", price: "", apiErrorMessage: "" },
+    initialValues: { url: "", name: "", price: 0, apiErrorMessage: "" },
     validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
+      const username = props.username ?? "";
+      const wishListId = props.wishListId ?? "";
+      const request: CreateItemRequest = {
+        item: { url: values.url, name: values.name, price: values.price },
+      };
+
+      const { data, error } = await createItem(username, wishListId, request);
+
+      if (error) {
+        formik.setFieldValue("apiErrorMessage", error.message);
+        return;
+      }
+
+      if (data?.item) {
+        queryClient.setQueryData(
+          // TODO: Store the query key for reusability instead of hardcoding it.
+          ["listItemsResponse", props.username, props.wishListId],
+          (prevState: ListItemsResponse) => ({
+            items: [data.item, ...prevState.items],
+          }),
+        );
+      }
+
+      formik.resetForm();
+      props.handleClose();
     },
   });
 

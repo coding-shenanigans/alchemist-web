@@ -110,6 +110,8 @@ export default function WishList() {
       <NewItemForm
         open={openNewItemForm}
         handleClose={handleCloseNewItemForm}
+        username={username}
+        wishListId={wishListId}
       />
     </>
   );

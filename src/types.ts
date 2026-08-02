@@ -84,6 +84,18 @@ export interface GetWishListResponse {
   wishList: WishList;
 }
 
+export interface CreateItemRequest {
+  item: {
+    url: string;
+    name: string;
+    price: number;
+  };
+}
+
+export interface CreateItemResponse {
+  item: Item;
+}
+
 export interface ListItemsResponse {
   items: Item[];
 }
