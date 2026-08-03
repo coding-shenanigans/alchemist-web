@@ -10,9 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 import { getWishListQuery, listItemsQuery } from "../../api/endpoint-wrappers";
 import ErrorPage from "../error/ErrorPage";
 import WishListSkeleton from "./WishListSkeleton";
+import type { Item } from "../../types";
+import EditItemForm from "./EditItemForm";
 
 export default function WishList() {
   const [openNewItemForm, setOpenNewItemForm] = useState(false);
+  const [openEditItemForm, setOpenEditItemForm] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const { username, wishListId } = useParams();
   const userSession = useAppStore((state) => state.userSession);
   const isWishListOwner = Boolean(
@@ -27,6 +31,14 @@ export default function WishList() {
 
   const handleCloseNewItemForm = () => {
     setOpenNewItemForm(false);
+  };
+
+  const handleOpenEditItemForm = () => {
+    setOpenEditItemForm(true);
+  };
+
+  const handleCloseEditItemForm = () => {
+    setOpenEditItemForm(false);
   };
 
   const wishListQuery = useQuery({
@@ -100,6 +112,8 @@ export default function WishList() {
           <ItemsTable
             isWishListOwner={isWishListOwner}
             items={itemsQuery.data?.items}
+            setSelectedItem={setSelectedItem}
+            handleOpenEditItemForm={handleOpenEditItemForm}
           />
         ) : (
           <Typography>There are no items to display.</Typography>
@@ -112,6 +126,12 @@ export default function WishList() {
         handleClose={handleCloseNewItemForm}
         username={username}
         wishListId={wishListId}
+      />
+      <EditItemForm
+        open={openEditItemForm}
+        handleClose={handleCloseEditItemForm}
+        // username={username}
+        item={selectedItem}
       />
     </>
   );
