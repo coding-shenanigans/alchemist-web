@@ -3,18 +3,47 @@ import {
   List,
   ListItem,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import type { Item } from "../../types";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Link as RouterLink } from "react-router";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  useState,
+  type Dispatch,
+  type MouseEvent,
+  type SetStateAction,
+} from "react";
 
 interface ItemsTableProps {
   isWishListOwner: boolean;
   items: Item[];
+  setSelectedItem: Dispatch<SetStateAction<Item | null>>;
+  handleOpenEditItemForm: () => void;
 }
 
 export default function ItemsTable(props: ItemsTableProps) {
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const handleOpenMenu = (event: MouseEvent<HTMLButtonElement>, item: Item) => {
+    setAnchorEl(event.currentTarget);
+    props.setSelectedItem(item);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleEdit = () => {
+    props.handleOpenEditItemForm();
+    handleCloseMenu();
+  };
+
   return (
     <List disablePadding>
       {props.items.map((item) => (
@@ -24,9 +53,31 @@ export default function ItemsTable(props: ItemsTableProps) {
           secondaryAction={
             props.isWishListOwner ? (
               <>
-                <IconButton edge="end" aria-label="item options">
+                <IconButton
+                  edge="end"
+                  aria-label="item options"
+                  onClick={(event) => handleOpenMenu(event, item)}
+                >
                   <MoreVertIcon />
                 </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseMenu}
+                >
+                  <MenuItem onClick={handleEdit}>
+                    <ListItemIcon>
+                      <EditIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Edit</ListItemText>
+                  </MenuItem>
+                  <MenuItem>
+                    <ListItemIcon>
+                      <DeleteIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Delete</ListItemText>
+                  </MenuItem>
+                </Menu>
               </>
             ) : undefined
           }
