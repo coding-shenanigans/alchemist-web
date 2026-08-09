@@ -11,7 +11,9 @@ import {
 import { useFormik } from "formik";
 import { NumericFormat } from "react-number-format";
 import * as yup from "yup";
-import type { Item } from "../../types";
+import type { Item, ListItemsResponse, UpdateItemRequest } from "../../types";
+import { updateItem } from "../../api/endpoints";
+import { useQueryClient } from "@tanstack/react-query";
 
 const validationSchema = yup.object({
   url: yup
@@ -32,10 +34,14 @@ const validationSchema = yup.object({
 interface EditItemFormProps {
   open: boolean;
   handleClose: () => void;
-  item: Item | null;
+  username: string | undefined;
+  wishListId: string | undefined;
+  item: Item | undefined;
 }
 
 export default function EditItemForm(props: EditItemFormProps) {
+  const queryClient = useQueryClient();
+
   const formik = useFormik({
     initialValues: {
       url: props.item?.url ?? "",
@@ -46,7 +52,41 @@ export default function EditItemForm(props: EditItemFormProps) {
     enableReinitialize: true,
     validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
+      const username = props.username ?? "";
+      const wishListId = props.wishListId ?? "";
+      const itemId = props.item?.id ?? 0;
+      const request: UpdateItemRequest = {
+        url: values.url,
+        name: values.name,
+        price: values.price,
+      };
+
+      const { data, error } = await updateItem(
+        username,
+        wishListId,
+        itemId,
+        request,
+      );
+
+      if (error) {
+        formik.setFieldValue("apiErrorMessage", error.message);
+        return;
+      }
+
+      if (data?.item) {
+        queryClient.setQueryData(
+          // TODO: Store the query key for reusability instead of hardcoding it.
+          ["listItemsResponse", props.username, props.wishListId],
+          (prevState: ListItemsResponse) => ({
+            items: prevState.items.map((item) =>
+              item.id === data.item.id ? data.item : item,
+            ),
+          }),
+        );
+      }
+
+      formik.resetForm();
+      props.handleClose();
     },
   });
 

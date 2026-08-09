@@ -13,7 +13,7 @@ import { useFormik } from "formik";
 interface DeleteItemFormProps {
   open: boolean;
   handleClose: () => void;
-  item: Item | null;
+  item: Item | undefined;
 }
 
 export default function DeleteItemForm(props: DeleteItemFormProps) {

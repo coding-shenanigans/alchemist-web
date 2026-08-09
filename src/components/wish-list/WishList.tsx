@@ -18,7 +18,7 @@ export default function WishList() {
   const [openNewItemForm, setOpenNewItemForm] = useState(false);
   const [openEditItemForm, setOpenEditItemForm] = useState(false);
   const [openDeleteItemForm, setOpenDeleteItemForm] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Item | undefined>(undefined);
   const { username, wishListId } = useParams();
   const userSession = useAppStore((state) => state.userSession);
   const isWishListOwner = Boolean(
@@ -141,6 +141,8 @@ export default function WishList() {
       <EditItemForm
         open={openEditItemForm}
         handleClose={handleCloseEditItemForm}
+        username={username}
+        wishListId={wishListId}
         item={selectedItem}
       />
       <DeleteItemForm

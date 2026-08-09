@@ -96,6 +96,16 @@ export interface CreateItemResponse {
   item: Item;
 }
 
+export interface UpdateItemRequest {
+  url: string;
+  name: string;
+  price: number;
+}
+
+export interface UpdateItemResponse {
+  item: Item;
+}
+
 export interface ListItemsResponse {
   items: Item[];
 }
