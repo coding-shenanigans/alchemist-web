@@ -23,7 +23,7 @@ import {
 interface ItemsTableProps {
   isWishListOwner: boolean;
   items: Item[];
-  setSelectedItem: Dispatch<SetStateAction<Item | null>>;
+  setSelectedItem: Dispatch<SetStateAction<Item | undefined>>;
   handleOpenEditItemForm: () => void;
   handleOpenDeleteItemForm: () => void;
 }

@@ -14,6 +14,8 @@ import type {
   SignInResponse,
   SignUpRequest,
   SignUpResponse,
+  UpdateItemRequest,
+  UpdateItemResponse,
   UpdateWishListRequest,
   UpdateWishListResponse,
 } from "../types";
@@ -413,6 +415,36 @@ export const createItem = async (
   };
 
   return await sendRequest<CreateItemResponse>(url, options, true);
+};
+
+/**
+ * Updates an item.
+ * @param username The target username.
+ * @param wishListId The target wish list id.
+ * @param itemId The target item id.
+ * @param request The request object.
+ * @returns An ApiResponse object.
+ */
+export const updateItem = async (
+  username: string,
+  wishListId: string,
+  itemId: number,
+  request: UpdateItemRequest,
+): Promise<ApiResponse<UpdateItemResponse>> => {
+  const { userSession } = useAppStore.getState();
+
+  const url = `${baseUrl}/users/${username}/wish-lists/${wishListId}/items/${itemId}`;
+  const options: RequestInit = {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userSession?.accessToken}`,
+    },
+    body: JSON.stringify(request),
+    credentials: "include",
+  };
+
+  return await sendRequest<UpdateItemResponse>(url, options, true);
 };
 
 /**
