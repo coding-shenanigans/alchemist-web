@@ -12,10 +12,12 @@ import ErrorPage from "../error/ErrorPage";
 import WishListSkeleton from "./WishListSkeleton";
 import type { Item } from "../../types";
 import EditItemForm from "./EditItemForm";
+import DeleteItemForm from "./DeleteItemForm";
 
 export default function WishList() {
   const [openNewItemForm, setOpenNewItemForm] = useState(false);
   const [openEditItemForm, setOpenEditItemForm] = useState(false);
+  const [openDeleteItemForm, setOpenDeleteItemForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const { username, wishListId } = useParams();
   const userSession = useAppStore((state) => state.userSession);
@@ -39,6 +41,14 @@ export default function WishList() {
 
   const handleCloseEditItemForm = () => {
     setOpenEditItemForm(false);
+  };
+
+  const handleOpenDeleteItemForm = () => {
+    setOpenDeleteItemForm(true);
+  };
+
+  const handleCloseDeleteItemForm = () => {
+    setOpenDeleteItemForm(false);
   };
 
   const wishListQuery = useQuery({
@@ -114,6 +124,7 @@ export default function WishList() {
             items={itemsQuery.data?.items}
             setSelectedItem={setSelectedItem}
             handleOpenEditItemForm={handleOpenEditItemForm}
+            handleOpenDeleteItemForm={handleOpenDeleteItemForm}
           />
         ) : (
           <Typography>There are no items to display.</Typography>
@@ -130,7 +141,11 @@ export default function WishList() {
       <EditItemForm
         open={openEditItemForm}
         handleClose={handleCloseEditItemForm}
-        // username={username}
+        item={selectedItem}
+      />
+      <DeleteItemForm
+        open={openDeleteItemForm}
+        handleClose={handleCloseDeleteItemForm}
         item={selectedItem}
       />
     </>

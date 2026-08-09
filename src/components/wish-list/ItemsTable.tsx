@@ -25,6 +25,7 @@ interface ItemsTableProps {
   items: Item[];
   setSelectedItem: Dispatch<SetStateAction<Item | null>>;
   handleOpenEditItemForm: () => void;
+  handleOpenDeleteItemForm: () => void;
 }
 
 export default function ItemsTable(props: ItemsTableProps) {
@@ -41,6 +42,11 @@ export default function ItemsTable(props: ItemsTableProps) {
 
   const handleEdit = () => {
     props.handleOpenEditItemForm();
+    handleCloseMenu();
+  };
+
+  const handleDelete = () => {
+    props.handleOpenDeleteItemForm();
     handleCloseMenu();
   };
 
@@ -71,7 +77,7 @@ export default function ItemsTable(props: ItemsTableProps) {
                     </ListItemIcon>
                     <ListItemText>Edit</ListItemText>
                   </MenuItem>
-                  <MenuItem>
+                  <MenuItem onClick={handleDelete}>
                     <ListItemIcon>
                       <DeleteIcon fontSize="small" />
                     </ListItemIcon>
