@@ -26,7 +26,7 @@ interface WishListsTableProps {
   username?: string;
   isProfileOwner: boolean;
   wishLists: WishList[];
-  setSelectedWishList: Dispatch<SetStateAction<WishList | null>>;
+  setSelectedWishList: Dispatch<SetStateAction<WishList | undefined>>;
   handleOpenEditWishListForm: () => void;
   handleOpenDeleteWishListForm: () => void;
 }

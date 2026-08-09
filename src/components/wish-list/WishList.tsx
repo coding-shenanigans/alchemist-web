@@ -148,6 +148,8 @@ export default function WishList() {
       <DeleteItemForm
         open={openDeleteItemForm}
         handleClose={handleCloseDeleteItemForm}
+        username={username}
+        wishListId={wishListId}
         item={selectedItem}
       />
     </>

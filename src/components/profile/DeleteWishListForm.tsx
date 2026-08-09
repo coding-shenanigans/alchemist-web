@@ -16,7 +16,7 @@ interface DeleteWishListFormProps {
   open: boolean;
   handleClose: () => void;
   username: string | undefined;
-  wishList: WishList | null;
+  wishList: WishList | undefined;
 }
 
 export default function DeleteWishListForm(props: DeleteWishListFormProps) {

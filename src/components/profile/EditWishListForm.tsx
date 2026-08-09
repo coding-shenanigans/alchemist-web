@@ -36,7 +36,7 @@ interface EditWishListFormProps {
   open: boolean;
   handleClose: () => void;
   username: string | undefined;
-  wishList: WishList | null;
+  wishList: WishList | undefined;
 }
 
 export default function EditWishListForm(props: EditWishListFormProps) {
