@@ -20,9 +20,9 @@ export default function Profile() {
   const [openNewWishListForm, setOpenNewWishListForm] = useState(false);
   const [openEditWishListForm, setOpenEditWishListForm] = useState(false);
   const [openDeleteWishListForm, setOpenDeleteWishListForm] = useState(false);
-  const [selectedWishList, setSelectedWishList] = useState<WishList | null>(
-    null,
-  );
+  const [selectedWishList, setSelectedWishList] = useState<
+    WishList | undefined
+  >(undefined);
   const { username } = useParams();
   const userSession = useAppStore((state) => state.userSession);
   const isProfileOwner = Boolean(

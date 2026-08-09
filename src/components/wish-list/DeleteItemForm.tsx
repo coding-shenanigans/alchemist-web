@@ -7,22 +7,50 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
-import type { Item } from "../../types";
+import type { Item, ListItemsResponse } from "../../types";
 import { useFormik } from "formik";
+import { deleteItem } from "../../api/endpoints";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface DeleteItemFormProps {
   open: boolean;
   handleClose: () => void;
+  username: string | undefined;
+  wishListId: string | undefined;
   item: Item | undefined;
 }
 
 export default function DeleteItemForm(props: DeleteItemFormProps) {
+  const queryClient = useQueryClient();
+
   const formik = useFormik({
     initialValues: {
       apiErrorMessage: "",
     },
     onSubmit: async () => {
-      console.log("Deleting item...");
+      const username = props.username ?? "";
+      const wishListId = props.wishListId ?? "";
+      const itemId = props.item?.id ?? 0;
+
+      const { error } = await deleteItem(username, wishListId, itemId);
+
+      if (error) {
+        formik.setFieldValue("apiErrorMessage", error.message);
+        return;
+      }
+
+      if (itemId) {
+        queryClient.setQueryData(
+          // TODO: Store the query key for reusability instead of hardcoding it.
+          ["listItemsResponse", props.username, props.wishListId],
+          (prevState: ListItemsResponse) => ({
+            items: prevState.items.filter((item) => item.id !== itemId),
+          }),
+        );
+      }
+
+      formik.resetForm();
+      props.handleClose();
     },
   });
 
@@ -61,6 +89,8 @@ export default function DeleteItemForm(props: DeleteItemFormProps) {
           variant="contained"
           type="submit"
           form="delete-item-form"
+          loading={formik.isSubmitting}
+          loadingPosition="end"
         >
           Delete Permanently
         </Button>
