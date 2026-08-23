@@ -7,6 +7,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import type { Item } from "../../types";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -19,6 +20,7 @@ import {
   type MouseEvent,
   type SetStateAction,
 } from "react";
+import StatusChip from "./StatusChip";
 
 interface ItemsTableProps {
   isWishListOwner: boolean;
@@ -94,8 +96,19 @@ export default function ItemsTable(props: ItemsTableProps) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            {/* TODO: Format the price to always show 2 decimal places. */}
-            <ListItemText primary={item.name} secondary={`$${item.price}`} />
+            <ListItemText>
+              <span style={{ marginRight: "1rem" }}>{item.name}</span>
+              <StatusChip
+                isWishListOwner={props.isWishListOwner}
+                status={item.status}
+                username={item.reservedByUsername}
+              />
+              {/* TODO: Format the price to always show 2 decimal places. */}
+              <Typography
+                variant="body2"
+                color="textSecondary"
+              >{`$${item.price}`}</Typography>
+            </ListItemText>
           </ListItemButton>
         </ListItem>
       ))}
