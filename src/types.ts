@@ -52,8 +52,11 @@ export interface Item {
   url: string;
   name: string;
   price: number;
+  status: string;
+  reservedByUserId: number;
   createdAt: string;
   updatedAt: string;
+  reservedByUsername: string;
 }
 
 export interface CreateWishListRequest {
