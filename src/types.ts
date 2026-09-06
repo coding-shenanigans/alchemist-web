@@ -100,9 +100,11 @@ export interface CreateItemResponse {
 }
 
 export interface UpdateItemRequest {
-  url: string;
-  name: string;
-  price: number;
+  url?: string;
+  name?: string;
+  price?: number;
+  status?: string;
+  reservedByUserId?: number;
 }
 
 export interface UpdateItemResponse {
