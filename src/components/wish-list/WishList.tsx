@@ -1,4 +1,12 @@
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Snackbar,
+  Typography,
+  type AlertColor,
+  type SnackbarCloseReason,
+} from "@mui/material";
 import VisibilityIcon from "../shared/VisibilityIcon";
 import AddIcon from "@mui/icons-material/Add";
 import { useParams } from "react-router";
@@ -6,18 +14,23 @@ import { useAppStore } from "../../zustand/store";
 import { useState } from "react";
 import ItemsTable from "./ItemsTable";
 import NewItemForm from "./NewItemForm";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getWishListQuery, listItemsQuery } from "../../api/endpoint-wrappers";
 import ErrorPage from "../error/ErrorPage";
 import WishListSkeleton from "./WishListSkeleton";
-import type { Item } from "../../types";
+import type { Item, ListItemsResponse, UpdateItemRequest } from "../../types";
 import EditItemForm from "./EditItemForm";
 import DeleteItemForm from "./DeleteItemForm";
+import { updateItem } from "../../api/endpoints";
 
 export default function WishList() {
+  const queryClient = useQueryClient();
   const [openNewItemForm, setOpenNewItemForm] = useState(false);
   const [openEditItemForm, setOpenEditItemForm] = useState(false);
   const [openDeleteItemForm, setOpenDeleteItemForm] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>("error");
   const [selectedItem, setSelectedItem] = useState<Item | undefined>(undefined);
   const { username, wishListId } = useParams();
   const userSession = useAppStore((state) => state.userSession);
@@ -49,6 +62,49 @@ export default function WishList() {
 
   const handleCloseDeleteItemForm = () => {
     setOpenDeleteItemForm(false);
+  };
+
+  const handleCloseSnackbar = (
+    _event: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason,
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
+
+  const handleItemReceived = async () => {
+    const request: UpdateItemRequest = { status: "received" };
+    const { data, error } = await updateItem(
+      username ?? "",
+      wishListId ?? "",
+      selectedItem?.id ?? 0,
+      request,
+    );
+
+    if (error) {
+      console.log(error);
+      setSnackbarMessage(
+        "Failed to update the item's status. Please try again.",
+      );
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+      return;
+    }
+
+    if (data?.item) {
+      queryClient.setQueryData(
+        // TODO: Store the query key for reusability instead of hardcoding it.
+        ["listItemsResponse", username, wishListId],
+        (prevState: ListItemsResponse) => ({
+          items: prevState.items.map((item) =>
+            item.id === data.item.id ? data.item : item,
+          ),
+        }),
+      );
+    }
   };
 
   const wishListQuery = useQuery({
@@ -125,6 +181,7 @@ export default function WishList() {
             setSelectedItem={setSelectedItem}
             handleOpenEditItemForm={handleOpenEditItemForm}
             handleOpenDeleteItemForm={handleOpenDeleteItemForm}
+            handleItemReceived={handleItemReceived}
           />
         ) : (
           <Typography>There are no items to display.</Typography>
@@ -152,6 +209,23 @@ export default function WishList() {
         wishListId={wishListId}
         item={selectedItem}
       />
+      {/* TODO: Extract snackbar into the global scope, so it can be reused
+      by other components. */}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

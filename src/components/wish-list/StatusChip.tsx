@@ -7,7 +7,11 @@ interface StatusChipProps {
 }
 
 export default function StatusChip(props: StatusChipProps) {
-  if (props.isWishListOwner || props.status === "available") {
+  if (props.isWishListOwner && props.status === "reserved") {
+    return <Chip label="Available" color="success" />;
+  }
+
+  if (props.status === "available") {
     return <Chip label="Available" color="success" />;
   }
 
