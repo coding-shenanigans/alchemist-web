@@ -1,5 +1,6 @@
 import type {
   ApiResponse,
+  CancelItemReservationResponse,
   CreateItemRequest,
   CreateItemResponse,
   CreateWishListRequest,
@@ -10,6 +11,7 @@ import type {
   ListItemsResponse,
   ListWishListsResponse,
   RefreshResponse,
+  ReserveItemResponse,
   SignInRequest,
   SignInResponse,
   SignUpRequest,
@@ -199,6 +201,8 @@ export const refresh = async (): Promise<ApiResponse<RefreshResponse>> => {
   // Only refresh the user session if a user is authenticated.
   // This handles a scenario where a user signed out, but the signout API call
   // failed. Resulting in a refresh token existing after the user signed out.
+  // The refresh token can then be used to sign the user in again, which should
+  // not happen.
   if (!isAuthenticated) {
     return { status: 401, error: new Error("The user is not authenticated.") };
   }
@@ -502,4 +506,58 @@ export const listItems = async (
   };
 
   return await sendRequest<ListItemsResponse>(url, options, true);
+};
+
+/**
+ * Reserves an item.
+ * @param username The target username.
+ * @param wishListId The target wish list id.
+ * @param itemId The target item id.
+ * @returns An ApiResponse object.
+ */
+export const reserveItem = async (
+  username: string,
+  wishListId: string,
+  itemId: number,
+): Promise<ApiResponse<ReserveItemResponse>> => {
+  const { userSession } = useAppStore.getState();
+
+  const url = `${baseUrl}/users/${username}/wish-lists/${wishListId}/items/${itemId}/reservation`;
+  const options: RequestInit = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userSession?.accessToken}`,
+    },
+    credentials: "include",
+  };
+
+  return await sendRequest<ReserveItemResponse>(url, options, true);
+};
+
+/**
+ * Cancels an item reservation.
+ * @param username The target username.
+ * @param wishListId The target wish list id.
+ * @param itemId The target item id.
+ * @returns An ApiResponse object.
+ */
+export const cancelItemReservation = async (
+  username: string,
+  wishListId: string,
+  itemId: number,
+): Promise<ApiResponse<CancelItemReservationResponse>> => {
+  const { userSession } = useAppStore.getState();
+
+  const url = `${baseUrl}/users/${username}/wish-lists/${wishListId}/items/${itemId}/reservation`;
+  const options: RequestInit = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${userSession?.accessToken}`,
+    },
+    credentials: "include",
+  };
+
+  return await sendRequest<CancelItemReservationResponse>(url, options, true);
 };

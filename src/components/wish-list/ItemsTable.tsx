@@ -1,21 +1,14 @@
 import {
-  CircularProgress,
   IconButton,
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
-  Menu,
-  MenuItem,
   Typography,
 } from "@mui/material";
-import type { Item } from "../../types";
+import type { Item, UserSession } from "../../types";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Link as RouterLink } from "react-router";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import RedeemIcon from "@mui/icons-material/Redeem";
 import {
   useState,
   type Dispatch,
@@ -23,14 +16,20 @@ import {
   type SetStateAction,
 } from "react";
 import StatusChip from "./StatusChip";
+import OwnerItemMenu from "./OwnerItemMenu";
+import NonOwnerItemMenu from "./NonOwnerItemMenu";
 
 interface ItemsTableProps {
+  userSession: UserSession | null;
   isWishListOwner: boolean;
   items: Item[];
+  selectedItem?: Item;
   setSelectedItem: Dispatch<SetStateAction<Item | undefined>>;
   handleOpenEditItemForm: () => void;
   handleOpenDeleteItemForm: () => void;
   handleItemReceived: () => Promise<void>;
+  handleReserveItem: () => Promise<void>;
+  handleCancelItemReservation: () => Promise<void>;
 }
 
 export default function ItemsTable(props: ItemsTableProps) {
@@ -63,6 +62,49 @@ export default function ItemsTable(props: ItemsTableProps) {
     handleCloseMenu();
   };
 
+  const handleReserve = async () => {
+    setIsLoading(true);
+    await props.handleReserveItem();
+    setIsLoading(false);
+    handleCloseMenu();
+  };
+
+  const handleCancelReservation = async () => {
+    setIsLoading(true);
+    await props.handleCancelItemReservation();
+    setIsLoading(false);
+    handleCloseMenu();
+  };
+
+  const getItemMenu = () => {
+    if (props.isWishListOwner) {
+      return (
+        <OwnerItemMenu
+          anchorEl={anchorEl}
+          isLoading={isLoading}
+          handleCloseMenu={handleCloseMenu}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+          handleReceived={handleReceived}
+        />
+      );
+    } else if (props.userSession) {
+      return (
+        <NonOwnerItemMenu
+          anchorEl={anchorEl}
+          isLoading={isLoading}
+          selectedItem={props.selectedItem}
+          username={props.userSession.username}
+          handleCloseMenu={handleCloseMenu}
+          handleReserve={handleReserve}
+          handleCancelReservation={handleCancelReservation}
+        />
+      );
+    } else {
+      return <></>;
+    }
+  };
+
   return (
     <List disablePadding>
       {props.items.map((item) => {
@@ -75,7 +117,7 @@ export default function ItemsTable(props: ItemsTableProps) {
             key={item.id}
             disablePadding
             secondaryAction={
-              props.isWishListOwner ? (
+              props.userSession ? (
                 <>
                   <IconButton
                     edge="end"
@@ -84,37 +126,10 @@ export default function ItemsTable(props: ItemsTableProps) {
                   >
                     <MoreVertIcon />
                   </IconButton>
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleCloseMenu}
-                  >
-                    <MenuItem onClick={handleEdit}>
-                      <ListItemIcon>
-                        <EditIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText>Edit</ListItemText>
-                    </MenuItem>
-                    <MenuItem onClick={handleDelete}>
-                      <ListItemIcon>
-                        <DeleteIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText>Delete</ListItemText>
-                    </MenuItem>
-                    <MenuItem onClick={handleReceived}>
-                      <ListItemIcon>
-                        <RedeemIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText>Received</ListItemText>
-                      {isLoading && (
-                        <CircularProgress
-                          size="1.25rem"
-                          aria-label="Updating item status..."
-                          sx={{ ml: 1.5 }}
-                        />
-                      )}
-                    </MenuItem>
-                  </Menu>
+                  {/* TODO: Passing the `item` into this function doesn't 
+                  work (we always see options for the last item), but using
+                  the props.selectedItem does. Why is that? */}
+                  {getItemMenu()}
                 </>
               ) : undefined
             }

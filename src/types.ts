@@ -115,6 +115,14 @@ export interface ListItemsResponse {
   items: Item[];
 }
 
+export interface ReserveItemResponse {
+  item: Item;
+}
+
+export interface CancelItemReservationResponse {
+  item: Item;
+}
+
 export interface ErrorInfo {
   code: number;
   message: string;
