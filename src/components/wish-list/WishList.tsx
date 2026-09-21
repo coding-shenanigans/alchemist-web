@@ -21,7 +21,11 @@ import WishListSkeleton from "./WishListSkeleton";
 import type { Item, ListItemsResponse, UpdateItemRequest } from "../../types";
 import EditItemForm from "./EditItemForm";
 import DeleteItemForm from "./DeleteItemForm";
-import { updateItem } from "../../api/endpoints";
+import {
+  cancelItemReservation,
+  reserveItem,
+  updateItem,
+} from "../../api/endpoints";
 
 export default function WishList() {
   const queryClient = useQueryClient();
@@ -88,6 +92,64 @@ export default function WishList() {
       console.log(error);
       setSnackbarMessage(
         "Failed to update the item's status. Please try again.",
+      );
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+      return;
+    }
+
+    if (data?.item) {
+      queryClient.setQueryData(
+        // TODO: Store the query key for reusability instead of hardcoding it.
+        ["listItemsResponse", username, wishListId],
+        (prevState: ListItemsResponse) => ({
+          items: prevState.items.map((item) =>
+            item.id === data.item.id ? data.item : item,
+          ),
+        }),
+      );
+    }
+  };
+
+  const handleReserveItem = async () => {
+    const { data, error } = await reserveItem(
+      username ?? "",
+      wishListId ?? "",
+      selectedItem?.id ?? 0,
+    );
+
+    if (error) {
+      console.log(error);
+      setSnackbarMessage("Failed to reserve the item. Please try again.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+      return;
+    }
+
+    if (data?.item) {
+      queryClient.setQueryData(
+        // TODO: Store the query key for reusability instead of hardcoding it.
+        ["listItemsResponse", username, wishListId],
+        (prevState: ListItemsResponse) => ({
+          items: prevState.items.map((item) =>
+            item.id === data.item.id ? data.item : item,
+          ),
+        }),
+      );
+    }
+  };
+
+  const handleCancelItemReservation = async () => {
+    const { data, error } = await cancelItemReservation(
+      username ?? "",
+      wishListId ?? "",
+      selectedItem?.id ?? 0,
+    );
+
+    if (error) {
+      console.log(error);
+      setSnackbarMessage(
+        "Failed to cancel the item reservation. Please try again.",
       );
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
@@ -176,12 +238,16 @@ export default function WishList() {
 
         {itemsQuery.data?.items.length ? (
           <ItemsTable
+            userSession={userSession}
             isWishListOwner={isWishListOwner}
             items={itemsQuery.data?.items}
+            selectedItem={selectedItem}
             setSelectedItem={setSelectedItem}
             handleOpenEditItemForm={handleOpenEditItemForm}
             handleOpenDeleteItemForm={handleOpenDeleteItemForm}
             handleItemReceived={handleItemReceived}
+            handleReserveItem={handleReserveItem}
+            handleCancelItemReservation={handleCancelItemReservation}
           />
         ) : (
           <Typography>There are no items to display.</Typography>
