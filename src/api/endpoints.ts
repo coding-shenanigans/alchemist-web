@@ -9,6 +9,7 @@ import type {
   GetUserProfileResponse,
   GetWishListResponse,
   ListItemsResponse,
+  ListUsersResponse,
   ListWishListsResponse,
   RefreshResponse,
   ReserveItemResponse,
@@ -560,4 +561,26 @@ export const cancelItemReservation = async (
   };
 
   return await sendRequest<CancelItemReservationResponse>(url, options, true);
+};
+
+/**
+ * Fetches users.
+ * @param query The search query.
+ * @param pageToken The next page token.
+ * @returns An ApiResponse object.
+ */
+export const listUsers = async (
+  query: string,
+  pageToken: string,
+): Promise<ApiResponse<ListUsersResponse>> => {
+  const url = `${baseUrl}/users?q=${query}&pageSize=20&pageToken=${pageToken}`;
+  const options: RequestInit = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  };
+
+  return await sendRequest<ListUsersResponse>(url, options, false);
 };
