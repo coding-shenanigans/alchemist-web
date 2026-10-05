@@ -10,6 +10,10 @@ export interface UserSession {
   accessToken: string;
 }
 
+export interface UserResult {
+  username: string;
+}
+
 export interface SignInRequest {
   email: string;
   password: string;
@@ -121,6 +125,11 @@ export interface ReserveItemResponse {
 
 export interface CancelItemReservationResponse {
   item: Item;
+}
+
+export interface ListUsersResponse {
+  users: UserResult[];
+  nextPageToken?: string;
 }
 
 export interface ErrorInfo {
