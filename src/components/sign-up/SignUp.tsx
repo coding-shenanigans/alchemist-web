@@ -1,6 +1,7 @@
 import { Box, Link, Paper, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router";
 import SignUpForm from "./SignUpForm";
+import { APP_NAME } from "../../constants";
 
 export default function SignUp() {
   return (
@@ -25,7 +26,7 @@ export default function SignUp() {
         <Typography variant="h5" mb={2}>
           <Link underline="none" component={RouterLink} to="/">
             {/* TODO: fetch app name from constants */}
-            Alchemist
+            {APP_NAME}
           </Link>
         </Typography>
         <Typography variant="h6" mb={2}>
