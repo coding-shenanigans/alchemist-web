@@ -1,4 +1,5 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
+import { APP_NAME } from "../constants";
 
 export default function SplashScreen() {
   return (
@@ -12,7 +13,7 @@ export default function SplashScreen() {
       sx={{ backgroundColor: "#f1f3f4" }}
     >
       <Typography variant="h3" mb={2}>
-        Alchemist
+        {APP_NAME}
       </Typography>
       <CircularProgress aria-label="Loading…" />
     </Box>
