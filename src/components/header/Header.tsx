@@ -45,7 +45,7 @@ export default function Header() {
             >
               {APP_NAME}
             </Link>
-            <Chip label="Beta" color="secondary" sx={{ mx: 1 }} />
+            <Chip label="Beta" color="secondary" sx={{ ml: 1 }} />
             <Tooltip title="Report a bug">
               <IconButton
                 aria-label="Report a bug"
