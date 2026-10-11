@@ -1,7 +1,9 @@
 import {
   AppBar,
+  Button,
   Chip,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
@@ -43,7 +45,7 @@ export default function Header() {
             >
               {APP_NAME}
             </Link>
-            <Chip label="Beta" color="secondary" sx={{ ml: 1 }} />
+            <Chip label="Beta" color="secondary" sx={{ mx: 1 }} />
             <Tooltip title="Report a bug">
               <IconButton
                 aria-label="Report a bug"
@@ -66,19 +68,28 @@ export default function Header() {
         </Toolbar>
       </AppBar>
       <Toolbar />
+
+      {/* Bug dialog */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
         <DialogTitle>Report a Bug</DialogTitle>
         <DialogContent>
-          Thank you for taking the time to report a bug! Please send an email to{" "}
-          <b>coding.shenanigans@gmail.com</b> with the following information:
+          Thank you for taking the time to report a bug! <br />
+          <br />
+          Please send an email to <b>coding.shenanigans@gmail.com</b> with the
+          following information:
           <ul>
-            <li>Subject: [{APP_NAME} Bug] Short description of the issue.</li>
             <li>
-              Body: Clear steps to reproduce the issue, and screenshots if
-              available.
+              <b>Subject:</b> [{APP_NAME} Bug] Short description of the issue.
+            </li>
+            <li>
+              <b>Body:</b> Clear steps to reproduce the issue, and screenshots
+              if available.
             </li>
           </ul>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
       </Dialog>
     </>
   );
