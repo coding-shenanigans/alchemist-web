@@ -24,8 +24,7 @@ import type {
 } from "../types";
 import { useAppStore } from "../zustand/store";
 
-// TODO: Fetch backend url from env or constants file.
-const baseUrl = "http://localhost:9000";
+const baseUrl = import.meta.env.VITE_API_URL;
 
 let refreshPromise: Promise<ApiResponse<RefreshResponse>> | null = null;
 

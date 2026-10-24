@@ -75,7 +75,7 @@ export default function Header() {
         <DialogContent>
           Thank you for taking the time to report a bug! <br />
           <br />
-          Please send an email to <b>coding.shenanigans@gmail.com</b> with the
+          Please send an email to <b>support@wishfishing.com</b> with the
           following information:
           <ul>
             <li>
