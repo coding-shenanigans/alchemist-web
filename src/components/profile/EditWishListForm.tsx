@@ -21,7 +21,8 @@ import { updateWishList } from "../../api/endpoints";
 // TODO: Define the wish list visibility options in a reusable location.
 const visibilityOptions = [
   { value: "public", label: "Public" },
-  { value: "friends_only", label: "Friends Only" },
+  // TODO: Enable option after implement the friends feature.
+  // { value: "friends_only", label: "Friends Only" },
   { value: "private", label: "Private" },
 ];
 
